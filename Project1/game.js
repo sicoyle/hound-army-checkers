@@ -9,15 +9,13 @@ var gameBoard = createBoard(function(el,row,col,i){
         console.log("You clicked on item #:",i);
         console.log("Cell value:",el.innerHTML);
         
-        console.log(validatePiece(i));
-                         
+
         el.className='clicked';
         if (lastClicked) lastClicked.className='';
         lastClicked = el;
     });
 
 document.body.appendChild(gameBoard);
-
 
 var tx = document.createElement("P");
 tx.innerHTML = "Click me!";
@@ -40,7 +38,6 @@ var boardState = [
     ];
 
 drawBoard(boardState);
-
 
 function createBoard( callback ){
     var i=0;
@@ -81,7 +78,6 @@ function createBoard( callback ){
     return board;
 }
 
-
 function drawBoard(state) {
     var board = document.getElementById("board");
     var a = 1;
@@ -120,6 +116,55 @@ var validatePiece = function(el) {
     }
 }
 
+var validateDestination = function() {
+    console.log('This is the id: ' + lastClicked.id)
+    let square = document.getElementById(lastClicked.id);
+
+/*    square.addEventListener('click',(function(el,r,c,i){
+        return function(){
+        callback(el,r,c,i);
+        }
+    })(square,r,c,i),false);
+*/
+	if(square.innerHTML == '')
+		return false;
+
+        //Make sure actually valid space by checking if piece th3ere or if can move
+	console.log("Destination: ", square.id);
+	return true;
+}
+
+document.addEventListener('start', function (event) {
+   drawBoard();
+
+})
+
+document.addEventListener('click', function (event, el)  {
+    let isValid = false;
+    console.log('This is the id: ' + lastClicked.id)
+    var selected = document.getElementById(lastClicked.id);
+
+    isValid = validateDestination();
+    console.log("Valid destination: ", isValid)
+
+    if(isValid){
+        lastClicked
+    }
+})
+
+//Check el to see how to fix to do this
+var selectedPiece = {
+    location: "", 
+    innerValue: ""  
+}
+
+
+
+
+
+
+
+
 const musicToggle = () => {
     var myAudio = document.getElementById("myAudio");
     var isPlaying = false;
@@ -137,6 +182,32 @@ function togglePlay(isPlaying) {
 };
 
 
+/*
+//AI logic
+var AIMove = function(el) {
+   	let selected = document.getElementById(el);
+	let row = Math.round(Math.random() * 8);
+	let col = Math.round(Math.random() * 8);
+	
+	selected = (2 * row) + col + 1;
+	/*
+	selected = {
+			board.row: Math.round(Math.random() * 8),
+			board.col: Math.round(Math.random() * 8) 
+		};
+	
+	*/
+	
+	//AI ppiece
+/*	while(selected.innterHTML != "W" || selected.innerHTML != "w")
+	{
+		console.log("tried to get white");
+		selected = (2 * row) + col + 1;
+		
+		
+	}
+*///	console.log("This is the random element based on click",document.getElementById(selected));
+//}
 
 
 
