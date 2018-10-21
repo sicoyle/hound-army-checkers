@@ -1,16 +1,32 @@
 <html>
     <head>
-        Test2
+        Hound army checkers
+        <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        p {
+            display: inline;
+        }
+        </style>
+        <script type="text/javascript" src="game.js"></script>
     </head>
-    
     <body>
-        <script type = "text/javascript" src="game.js">
-        </script>
-        
-        <audio id="myAudio" src="http://www.sousound.com/music/healing/healing_01.mp3" preload="auto">
-        </audio>
-        <a onclick="return musicToggle();">Click here to hear.</a>
-
+        <div id='world'>
+        </div>
     </body>
-    
+    <p>Current Players Turn:<p id="player"></p></p><br>
+    <p>Selected Piece:<p id="actor"></p></p>
+    <br><br>
+    <table>
+        <tr>Shot clock:</tr>
+        <th><td>player1</td><td>player 2</td></th>
+        <tr><td id="p1sc">0</td><td id="p2sc">0</td></tr>
+    </table>
+    <script>
+        init();
+    </script>
 </html>

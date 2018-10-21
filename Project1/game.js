@@ -1,215 +1,147 @@
-var lastClicked;
+const PLAYER_1='black';
+const PLAYER_2='white';
+var currentPlayer=PLAYER_1;
+var bias=1;
+var selectedPiece;
+var highlightedSquares = new Set();
+var sc1=0;
+var sc2=0;
 
-// Create an instance of the game board, and define in the function
-// that gets called when any cell is clicked
-var gameBoard = createBoard(function(el,row,col,i){
-        console.log("You clicked on element:",el.id);
-        console.log("You clicked on row:",row);
-        console.log("You clicked on col:",col);
-        console.log("You clicked on item #:",i);
-        console.log("Cell value:",el.innerHTML);
-        
-
-        el.className='clicked';
-        if (lastClicked) lastClicked.className='';
-        lastClicked = el;
-    });
-
-document.body.appendChild(gameBoard);
-
-var tx = document.createElement("P");
-tx.innerHTML = "Click me!";
-tx.addEventListener("click",function(){
-                    tx.innerHTML = "Thanks!";
-                    });
-tx.style.textAlign = 'center';
-document.body.appendChild(tx);
-
-// Initialize game board
-var boardState = [
-    ['','w','','w','','w','','w'],
-    ['w','','w','','w','','w',''],
-    ['','w','','w','','w','','w'],
+const world = [
+    ['black','black','black','black','black','black','black','black'],
     ['','','','','','','',''],
     ['','','','','','','',''],
-    ['b','','b','','b','','b',''],
-    ['','b','','b','','b','','b'],
-    ['b','','b','','b','','b','',]
-    ];
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['white','white','white','white','white','white','white','white']
+];
 
-drawBoard(boardState);
+var w;
 
-function createBoard( callback ){
-    var i=0;
-    var board = document.createElement('table');
-    
-    board.className = 'board';
-    board.id = 'board';
-    board.style.border = "thin solid #000";
-    
-    for (var r=0;r<8;++r){
-        var tr = board.appendChild(document.createElement('tr'));
-        
-        for (var c=0;c<8;++c){
-            var square = tr.appendChild(document.createElement('td'));
-            
-            square.id = ++i;
-            square.style.width = "40px";
-            square.style.height = "40px";
-            square.style.textAlign = "center";
-            square.style.color = "white";
-            
-            var data = square.appendChild(document.createTextNode(''));
-            
-            if(((c%2==0) && (r%2==1))||((c%2==1) && (r%2==0))) {
-                square.style.backgroundColor = "black";
+const drawWorld = () => {
+    console.log("Drawing world...");
+    let ul = document.createElement("ul");
+    let anchor = document.getElementById("world"); 
+    let list = anchor.appendChild(ul);
+    for(row in world) {
+        console.log("On row: " + row);
+        let li = document.createElement("li");
+        let currentList = list.appendChild(li);
+        for(column in world[row]) {
+            let DOMpiece = document.createElement("p");
+            DOMpiece.id = [row,column];
+            console.log("Piece: " + column);
+            console.log(world[row][column]);
+            switch(world[row][column]){
+                case 'white':
+                    console.log("White piece!");
+                    DOMpiece.innerHTML = "[w]";
+                    DOMpiece.style.background = "white"
+                    break;
+                case 'black':
+                    console.log("Black piece!");
+                    DOMpiece.innerHTML = "[b]";
+                    DOMpiece.style.background = "black"
+                    break;
+                default:
+                    console.log("empty piece!");
+                    DOMpiece.innerHTML = "[_]";
+                    DOMpiece.style.background = "red"
+                    break;
             }
-            
-            // attatch event listener to each square, which calls
-            // a function that is defined when an instance of the
-            // board is created
-            square.addEventListener('click',(function(el,r,c,i){
-                return function(){
-                callback(el,r,c,i);
-                }
-            })(square,r,c,i),false);
+            currentList.appendChild(DOMpiece);
         }
     }
-    return board;
+    console.log("Donezo");
+    return anchor;
 }
 
-function drawBoard(state) {
-    var board = document.getElementById("board");
-    var a = 1;
-    for(var i = 0,row; row = board.rows[i]; i++) {
-        // go through rows
-        for(var j = 0,col; col = row.cells[j]; j++) {
-            // go through cells
-            switch(state[i][j]) {
-                    case 'w':
-                        row.cells[j].innerHTML = 'w';
-                        break;
-                    case 'b':
-                        row.cells[j].innerHTML = 'b';
-                        break;
-                    default:
-                        row.cells[j].innerHTML = '';
-                        break;
-            }
-            a++;
-        }
-    }
-}
+const logError = (err) => console.error(err);
 
-// Checks if the piece passed to the function
-// is the player's piece
-var validatePiece = function(el) {
-    var selected = document.getElementById(el);
-    // if they selected their piece, and it is not a king
-    if(selected.innerHTML == 'b' || selected.innerHTML == 'B') {
-        return true;
-    }
-    
-    // if they selected a square that does not have their piece
-    else {
-        return false;
-    }
-}
+const isSelectableChecker = (row,col) => { return (world[row][col] == currentPlayer) ? true : false; }
 
-var validateDestination = function() {
-    console.log('This is the id: ' + lastClicked.id)
-    let square = document.getElementById(lastClicked.id);
-
-/*    square.addEventListener('click',(function(el,r,c,i){
-        return function(){
-        callback(el,r,c,i);
-        }
-    })(square,r,c,i),false);
-*/
-	if(square.innerHTML == '')
-		return false;
-
-        //Make sure actually valid space by checking if piece th3ere or if can move
-	console.log("Destination: ", square.id);
-	return true;
-}
-
-document.addEventListener('start', function (event) {
-   drawBoard();
-
-})
-
-document.addEventListener('click', function (event, el)  {
-    let isValid = false;
-    console.log('This is the id: ' + lastClicked.id)
-    var selected = document.getElementById(lastClicked.id);
-
-    isValid = validateDestination();
-    console.log("Valid destination: ", isValid)
-
-    if(isValid){
-        lastClicked
-    }
-})
-
-//Check el to see how to fix to do this
-var selectedPiece = {
-    location: "", 
-    innerValue: ""  
-}
-
-
-
-
-
-
-
-
-const musicToggle = () => {
-    var myAudio = document.getElementById("myAudio");
-    var isPlaying = false;
-    
-    togglePlay(isPlaying);
-}
-
-//Function to toggle playing of music
-function togglePlay(isPlaying) {
-    if (isPlaying) {
-        myAudio.pause()
+const selectPiece = (e) => {
+    requestedPiece = e.target;
+    let coords = requestedPiece.id;
+    console.log("requestedPiece: ", requestedPiece, "; coords: ", coords);
+    let row = coords[0];
+    let col = coords[2];
+    console.log("world piece: [%s,%s] === %s", row, col, world[row][col]);
+    if(isSelectableChecker(row,col)){
+        selectedPiece = requestedPiece;
+        document.getElementById('actor').innerHTML = selectedPiece.id;
+        let leftpossible = (+row+bias)+','+(+col-1);
+        console.log("leftmove coord: ",leftpossible);
+        let rightpossible = (+row+bias)+','+(+col+1);
+        console.log("rightmove coord: ",rightpossible);
+        let leftnode = document.getElementById(leftpossible);
+        let rightnode = document.getElementById(rightpossible);
+        highlightedSquares.add(leftnode);
+        highlightedSquares.add(rightnode);
+        console.log("just hinted: ", highlightedSquares, " highlightedSquares");
+        highlightedSquares.forEach(hintSquare);
+        //leftnode.style.background = 'yellow';
+        //rightnode.style.background = 'yellow';
+        w.addEventListener('click', movePiece, {once:true});
     } else {
-        myAudio.play();
+        logError("nonselectable piece");
+        //selectedPiece = false;
+        w.addEventListener('click', selectPiece, {once:true});
     }
-};
+}
 
+const hintSquare = (s) => s.style.background = 'yellow';
+const unhintSquare = (s) => s.style.background = 'red';
 
-/*
-//AI logic
-var AIMove = function(el) {
-   	let selected = document.getElementById(el);
-	let row = Math.round(Math.random() * 8);
-	let col = Math.round(Math.random() * 8);
-	
-	selected = (2 * row) + col + 1;
-	/*
-	selected = {
-			board.row: Math.round(Math.random() * 8),
-			board.col: Math.round(Math.random() * 8) 
-		};
-	
-	*/
-	
-	//AI ppiece
-/*	while(selected.innterHTML != "W" || selected.innerHTML != "w")
-	{
-		console.log("tried to get white");
-		selected = (2 * row) + col + 1;
-		
-		
-	}
-*///	console.log("This is the random element based on click",document.getElementById(selected));
-//}
+const movePiece = (e) => {
+    requestedSquare = e.target;
+    let coords = requestedSquare.id;
+    let selectedCoords = [selectedPiece.id[0],selectedPiece.id[2]];
+    console.log("movePiece: ", requestedSquare, "; coords: ", coords);
+    let row = coords[0];
+    let col = coords[2];
+    console.log("Moving piece: [%s,%s]", row, col);
+    //requestedSquare.style.background = "red"
+    w.addEventListener('click', selectPiece, {once:true});
+    setTimeout(((playerColor) => {
+        highlightedSquares.forEach(unhintSquare);
+        highlightedSquares.clear();
+        console.log("just unhinted and cleared: ", highlightedSquares, " highlightedSquares");
 
+        console.log("Setting timeout with ", playerColor, " moving into the spot");
+        selectedPiece.style.background = "red";
+        selectedPiece.innerHTML = "[_]";
+        requestedSquare.style.background = playerColor;
+        requestedSquare.innerHTML = "[" + playerColor.substr(0,1) + "]";
+        world[row][col] = playerColor;
+        console.log("selectedcoords: ", selectedCoords);
+        console.log("selectedCoord[0]:",selectedCoords[0],"; selectedCoords[1]:",selectedCoords[1]);
+        console.log("world[selectedCoords[0],selectedCoords[1]]:",world[selectedCoords[0]][selectedCoords[1]]);
+        world[selectedCoords[0]][selectedCoords[1]] = '';
+    })(currentPlayer), 30000)
+    currentPlayer = (currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
+    bias*=-1;
+    document.getElementById('player').innerHTML = currentPlayer;
+    console.log("now ", currentPlayer, "'s turn!");
+}
 
+const startTheClock = () => {
+setInterval(()=>{
+    let player = ((currentPlayer == PLAYER_1) ? 'p1sc' : 'p2sc');
+    console.log("player waiting " + currentPlayer);
+    let shotclock = document.getElementById(player);
+    shotclock.innerHTML = (player == 'p1sc') ? sc1++ : sc2++;
+},1000)
+}
 
+const init = () => {
+    w = drawWorld();
+    console.log(w);
+    w.addEventListener('click', selectPiece, {once:true});
+    console.log(currentPlayer);
+    document.getElementById('player').innerHTML = currentPlayer;
+    //startTheClock();
 
-
+}
