@@ -1,32 +1,91 @@
-<html>
-    <head>
-        Hound army checkers
-        <style>
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-        p {
-            display: inline;
-        }
-        </style>
-        <script type="text/javascript" src="game.js"></script>
-    </head>
-    <body>
-        <div id='world'>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> Hound Army Checkers</title>
+    <!--<meta charset="utf-8"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="index.css" rel="stylesheet">
+    <script type="text/javascript" src="Game.js"></script>
+</head>
+    <header>
+        <h2> Hound Army Checkers </h2>
+    </header>
+<body>
+    <div id="grid-container" class="grid-container">
+        <div id="space"></div>
+        <div id='world' align="center"></div>
+        <div id = "avatar-computer">
+            <img src="ErisPortrait.png"><br>
+            <label>Player 2</label>
         </div>
-    </body>
-    <p>Current Players Turn:<p id="player"></p></p><br>
-    <p>Selected Piece:<p id="actor"></p></p>
-    <br><br>
-    <table>
-        <tr>Shot clock:</tr>
-        <th><td>player1</td><td>player 2</td></th>
-        <tr><td id="p1sc">0</td><td id="p2sc">0</td></tr>
-    </table>
-    <script>
-        init();
-    </script>
+        <div id = "manual">
+            <button class="collapsible">How to Play</button>
+            <div class="content" style>
+                <p>Both players begins the game with 12 pieces, placed in the three rows closest to their side of the
+                    board. The object of the game is to capture all of your opponent's checkers or leave your opponent
+                    with no more valid moves. Players can only move one of their standard pieces diagonally forward,
+                    one space at a time. (revise)</p>
+            </div>
+            <script>
+                var x;
+                var button = document.getElementsByClassName('collapsible');
+                for (x = 0; x < button.length; x++) {
+                    button[x].addEventListener("click", function () {
+                        this.classList.toggle("active");
+                        var content = this.nextElementSibling;
+                        if (content.style.maxHeight) {
+                            content.style.maxHeight = null;
+                        }
+                        else {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                        }
+                    });
+                }
+            </script>
+        </div>
+        <div id = "avatar-player">
+            <img src="hound1.png"><br>
+            <label>Player 1</label>
+        </div>
+        <div class = "options-menu">
+            <div id = "scoreLabel">Score</div>
+            <div id = "misc">
+                <label>Current Players Turn:</label>
+                <p id="player"></p>
+            </div>
+            <div id = "clockLabel">Shot Clock</div>
+            <div id = "scoreTable">
+                <table class="scoreboard" align="center">
+                    <tr class="scoreTRL">
+                        <td class="table-item" width="30px">P1</td>
+                        <td class="table-item" width="30px">P2</td>
+                    </tr>
+                    <tr class="scoreTR">
+                        <td class="table-item">0</td>
+                        <td class="table-item">0</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="selected-piece">
+                <p>Selected Piece:<p id="actor"></p></p>
+            </div>
+            <div id="shot-clock" align="center">
+                <table class="clock-table" id="clock-table">
+                    <!--<tr>Shot clock:</tr>-->
+                    <tr><td class="timeLabel" width="40px">P1</td><td class="timeLabel" width="40px">P2</td></tr>
+                    <tr><td class="time" id="p1sc">0</td><td class="time" id="p2sc">0</td></tr>
+                </table>
+            </div>
+        </div>
+        <div id = "space3"></div>
+        <div id="Music" align="center">
+            <audio id="myAudio" src="http://www.sousound.com/music/healing/healing_01.mp3" controls="" preload="" loop="">
+            </audio>
+        </div>
+    </div>
+</body>
+<script>
+    init();
+</script>
 </html>
