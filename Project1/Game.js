@@ -3,7 +3,14 @@ const PLAYER_2='white';
 var currentPlayer=PLAYER_1;
 var opponentPlayer=PLAYER_2;
 var bias=1;
+var requestedPiece;
+var coords;
+var rowInt;
+var colInt;
 var selectedPiece;
+var prevSelectedPiece = [];
+var isJump = false;
+var isValid;
 var highlightedSquares = new Set();
 var player1Score = 0;
 var player2Score = 0;
@@ -106,9 +113,18 @@ const isSelectableChecker = (row,col) => {
 
 const selectPiece = (e) => {
 
-    let requestedPiece = e.target;
-    let coords = requestedPiece.id;
-    console.log("requestedPiece: ", requestedPiece, "; coords: ", coords);
+    if (!isJump) {
+        requestedPiece = e.target;
+        coords = requestedPiece.id
+    }
+    // if Jump just occured
+    else{
+        coords = (+rowInt) + ',' + (+colInt);
+    }
+    //coords = requestedPiece.id;
+    if(!isJump) {
+        console.log("requestedPiece: ", requestedPiece, "; coords: ", coords);
+    }
     let row = coords[0];
     let col = coords[2];
     console.log("world piece: [%s,%s] === %s", row, col, world[row][col]);
@@ -209,8 +225,6 @@ const movePiece = (e) => {
     let col;
     let selectedCoords = [selectedPiece.id[0], selectedPiece.id[2]];
     let capturedCoords = [];
-    let isValid;
-    let isJump = false;
     console.log("movePiece: ", requestedSquare, "; coords: ", coords);
     // BLACK
     if (currentPlayer === PLAYER_1) {
@@ -301,7 +315,7 @@ const movePiece = (e) => {
     //console.log("Moving piece: [%s,%s]", row, col);
 
     //requestedSquare.style.background = "red"
-    //w.addEventListener('click', selectPiece, {once: true});
+    w.addEventListener('click', selectPiece, {once: true});
 
     if (isValid) {
         setTimeout(((playerColor) => {
@@ -358,17 +372,14 @@ const movePiece = (e) => {
             capturedNode = document.getElementById(captured);
             capturedNode.innerHTML = '';
 
-            let oldSelectedPiece = [];
-            oldSelectedPiece[0] = rowInt;
-            oldSelectedPiece[1] = colInt;
+
+            prevSelectedPiece[0] = rowInt;
+            prevSelectedPiece[1] = colInt;
         }
             // check for another jump...
-
-
-            w.addEventListener('click', selectPiece, {once: true});
-            //selectedCoords = [parseInt(selectedPiece.id[0]), parseInt(selectedPiece.id[2])];
-            //console.log(typeof selectedCoords[0]);
-            //console.log(typeof oldSelectedPiece[0]);
+            selectedCoords = [parseInt(selectedPiece.id[0]), parseInt(selectedPiece.id[2])];
+            console.log(typeof selectedCoords[0]);
+            console.log(typeof prevSelectedPiece[0]);
             //bias *= -1;
             //document.getElementById('player').innerHTML = currentPlayer;
             //console.log("now ", currentPlayer, "'s turn!");
