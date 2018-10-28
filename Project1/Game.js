@@ -253,8 +253,7 @@ const movePiece = (e) => {
                 isJump = true;
             }
             else {
-                if(!isValid) {
-                    console.log("Move is not valid!");
+                if(!isValid || (world[coords[0]][coords[2]] === world[selectedCoords[0]][selectedCoords[1]])) {
                     alert("Move is not valid!");
                     isValid = false;
                     isJump = false;
@@ -300,8 +299,8 @@ const movePiece = (e) => {
                 isJump = true;
             }
             else {
-                if (!isValid) {
-                    console.log("Move is not valid!");
+                if (!isValid || (world[coords[0]][coords[2]] === world[selectedCoords[0]][selectedCoords[1]])) {
+                    alert("Move is not valid!");
                     isValid = false;
                     isJump = false;
                 }
