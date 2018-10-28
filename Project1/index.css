@@ -77,6 +77,8 @@ header {
     max-height: 0px;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+    font-size: small;
+    justify-content: left;
     background-color: #f1f1f1;
 }
 
