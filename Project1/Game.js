@@ -431,3 +431,6 @@ for (x = 0; x < button.length; x++) {
     });
 }
 
+function refreshPage(){
+    window.location.reload();
+}
