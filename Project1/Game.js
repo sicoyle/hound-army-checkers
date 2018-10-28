@@ -93,9 +93,9 @@ const logError = (err) => console.error(err);
 const isSelectableChecker = (row,col) => {
     let correctPlayer = (world[row][col] === currentPlayer);
     //let rightNotSelf = ((world[+row+bias][+col-1] === currentPlayer) && (world[+row+bias][+col+1] === '')); //!==
-        //currentPlayer));
+    //currentPlayer));
     //let leftNotSelf = ((world[+row+bias][+col-1] !== currentPlayer) && (world[+row+bias][+col+1] === ''));
-        //currentPlayer));
+    //currentPlayer));
     let rightNotSelf = (world[+row+bias][+col+1] !== currentPlayer);
     let leftNotSelf = (world[+row+bias][+col-1] !== currentPlayer);
 
@@ -104,12 +104,12 @@ const isSelectableChecker = (row,col) => {
 
     return correctPlayer && (rightNotSelf || leftNotSelf) && (leftOnBoard || rightOnBoard);};
 
-    /*
-    return ((world[row][col] === currentPlayer) &&
-    (((world[+row+bias][+col-1] === currentPlayer) && (world[+row+bias][+col+1] !==
-    currentPlayer)) || ((world[+row+bias][+col-1] !== currentPlayer) && (world[+row+bias][+col+1] ===
-    currentPlayer))) && (((world[+row+bias][+col-1] === '') || (world[+row+bias][+col+1]) === ''))) ;};
-    */
+/*
+return ((world[row][col] === currentPlayer) &&
+(((world[+row+bias][+col-1] === currentPlayer) && (world[+row+bias][+col+1] !==
+currentPlayer)) || ((world[+row+bias][+col-1] !== currentPlayer) && (world[+row+bias][+col+1] ===
+currentPlayer))) && (((world[+row+bias][+col-1] === '') || (world[+row+bias][+col+1]) === ''))) ;};
+*/
 
 const selectPiece = (e) => {
 
@@ -184,22 +184,21 @@ const selectPiece = (e) => {
             else
                 rightpossible = (+row + bias) + ',' + null;
             console.log("rightmove coord: ", rightpossible);
-        //let leftnode = document.getElementById(leftpossible);
-        //let rightnode = document.getElementById(rightpossible);
-        //highlightedSquares.add(leftnode);
-        //highlightedSquares.add(rightnode);
-        console.log("just hinted: ", highlightedSquares, " highlightedSquares");
-        highlightedSquares.forEach(hintSquare);
+            //let leftnode = document.getElementById(leftpossible);
+            //let rightnode = document.getElementById(rightpossible);
+            //highlightedSquares.add(leftnode);
+            //highlightedSquares.add(rightnode);
+            console.log("just hinted: ", highlightedSquares, " highlightedSquares");
+            highlightedSquares.forEach(hintSquare);
 
-        //leftnode.style.background = 'yellow';
+            //leftnode.style.background = 'yellow';
 
-        //rightnode.style.background = 'yellow';
+            //rightnode.style.background = 'yellow';
 
-        w.addEventListener('click', movePiece, {once:true});
-       }
+            w.addEventListener('click', movePiece, {once:true});
+        }
     } else {
-        logError("nonselectable piece");
-        //selectedPiece = false;
+        alert("Please select a different piece!");
         w.addEventListener('click', selectPiece, {once:true});
     }
 };
@@ -240,7 +239,7 @@ const movePiece = (e) => {
             console.log("Jump over ", rowInt-1, ',', colInt+1 ,'OR', rowInt-1,',', colInt-1,'. Requested Square ID: ', requestedSquare.id);
             // JUMP LEFT (BLACK)
             if (((selectedCoords[0] - rowInt === -2) && (selectedCoords[1] - colInt) === 2) &&
-               (world[rowInt-1][colInt+1] === opponentPlayer)) {
+                (world[rowInt-1][colInt+1] === opponentPlayer)) {
                 row = coords[0];
                 col = coords[2];
                 console.log("Moving piece: [%s,%s]", row, col);
@@ -262,7 +261,7 @@ const movePiece = (e) => {
             }
             else {
                 if(!isValid) {
-                    console.log("Move is not valid!");
+                    alert("Move is not valid!");
                     isValid = false;
                     isJump = false;
                 }
@@ -305,7 +304,7 @@ const movePiece = (e) => {
             }
             else {
                 if (!isValid) {
-                    console.log("Move is not valid!");
+                    alert("Move is not valid!");
                     isValid = false;
                     isJump = false;
                 }
@@ -376,20 +375,20 @@ const movePiece = (e) => {
             prevSelectedPiece[0] = rowInt;
             prevSelectedPiece[1] = colInt;
         }
-            // check for another jump...
-            selectedCoords = [parseInt(selectedPiece.id[0]), parseInt(selectedPiece.id[2])];
-            console.log(typeof selectedCoords[0]);
-            console.log(typeof prevSelectedPiece[0]);
-            //bias *= -1;
-            //document.getElementById('player').innerHTML = currentPlayer;
-            //console.log("now ", currentPlayer, "'s turn!");
+        // check for another jump...
+        selectedCoords = [parseInt(selectedPiece.id[0]), parseInt(selectedPiece.id[2])];
+        console.log(typeof selectedCoords[0]);
+        console.log(typeof prevSelectedPiece[0]);
+        //bias *= -1;
+        //document.getElementById('player').innerHTML = currentPlayer;
+        //console.log("now ", currentPlayer, "'s turn!");
 
-            //if(isJump) {
-            //    while (selectedCoords !== oldSelectedPiece) {
-            //        console.log("You can only move the last jumped piece!");
-            //        w.addEventListener('click', selectPiece, {once: true});
-            //    }
-            //}
+        //if(isJump) {
+        //    while (selectedCoords !== oldSelectedPiece) {
+        //        console.log("You can only move the last jumped piece!");
+        //        w.addEventListener('click', selectPiece, {once: true});
+        //    }
+        //}
 
     }
 };
