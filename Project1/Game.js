@@ -5,6 +5,8 @@ var opponentPlayer=PLAYER_2;
 var bias=1;
 var selectedPiece;
 var highlightedSquares = new Set();
+var player1Score = 0;
+var player2Score = 0;
 var sc1=0;
 var sc2=0;
 
@@ -206,6 +208,7 @@ const movePiece = (e) => {
     let row;
     let col;
     let selectedCoords = [selectedPiece.id[0], selectedPiece.id[2]];
+    let capturedCoords = [];
     let isValid;
     let isJump = false;
     console.log("movePiece: ", requestedSquare, "; coords: ", coords);
@@ -227,6 +230,8 @@ const movePiece = (e) => {
                 row = coords[0];
                 col = coords[2];
                 console.log("Moving piece: [%s,%s]", row, col);
+                capturedCoords[0] = rowInt-1;
+                capturedCoords[1] = colInt+1;
                 isValid = true;
                 isJump = true;
             }
@@ -236,6 +241,8 @@ const movePiece = (e) => {
                 row = coords[0];
                 col = coords[2];
                 console.log("Moving piece: [%s,%s]", row, col);
+                capturedCoords[0] = rowInt-1;
+                capturedCoords[1] = colInt-1;
                 isValid = true;
                 isJump = true;
             }
@@ -266,6 +273,8 @@ const movePiece = (e) => {
                 row = coords[0];
                 col = coords[2];
                 console.log("Moving piece: [%s,%s]", row, col);
+                capturedCoords[0] = rowInt+1;
+                capturedCoords[1] = colInt+1;
                 isValid = true;
                 isJump = true;
             }
@@ -275,6 +284,8 @@ const movePiece = (e) => {
                 row = coords[0];
                 col = coords[2];
                 console.log("Moving piece: [%s,%s]", row, col);
+                capturedCoords[0] = rowInt+1;
+                capturedCoords[1] = colInt-1;
                 isValid = true;
                 isJump = true;
             }
@@ -290,8 +301,7 @@ const movePiece = (e) => {
     //console.log("Moving piece: [%s,%s]", row, col);
 
     //requestedSquare.style.background = "red"
-
-    w.addEventListener('click', selectPiece, {once: true});
+    //w.addEventListener('click', selectPiece, {once: true});
 
     if (isValid) {
         setTimeout(((playerColor) => {
@@ -318,17 +328,58 @@ const movePiece = (e) => {
             world[selectedCoords[0]][selectedCoords[1]] = '';
         })(currentPlayer), 30000);
 
-        //if (!isJump) {
+        if (!isJump) {
             currentPlayer = (currentPlayer == PLAYER_1) ? PLAYER_2 : PLAYER_1;
             opponentPlayer = (opponentPlayer == PLAYER_2) ? PLAYER_1 : PLAYER_2;
             bias *= -1;
             document.getElementById('player').innerHTML = currentPlayer;
             console.log("now ", currentPlayer, "'s turn!");
-        //}
-        //else {
+            w.addEventListener('click', selectPiece, {once: true});
+        }
+        else {
+            let captured;
+            let capturedNode;
+            // update player score
+            if (currentPlayer === PLAYER_1) {
+                player1Score++;
+                console.log("Player 1 (Black) Score: ", player1Score);
+                let p1Score = document.getElementById("player1-score");
+                p1Score.textContent = player1Score;
+            }
+            if (currentPlayer === PLAYER_2) {
+                player2Score++;
+                console.log("Player 1 (Black) Score: ", player2Score);
+                let p2Score = document.getElementById("player2-score");
+                p2Score.textContent = player2Score;
+            }
+            // remove captured piece from board
+            world[capturedCoords[0]][capturedCoords[1]] = '';
+            captured = (capturedCoords[0]) + ',' + (capturedCoords[1]);
+            capturedNode = document.getElementById(captured);
+            capturedNode.innerHTML = '';
+
+            let oldSelectedPiece = [];
+            oldSelectedPiece[0] = rowInt;
+            oldSelectedPiece[1] = colInt;
+        }
             // check for another jump...
 
-        //}
+
+            w.addEventListener('click', selectPiece, {once: true});
+            //selectedCoords = [parseInt(selectedPiece.id[0]), parseInt(selectedPiece.id[2])];
+            //console.log(typeof selectedCoords[0]);
+            //console.log(typeof oldSelectedPiece[0]);
+            //bias *= -1;
+            //document.getElementById('player').innerHTML = currentPlayer;
+            //console.log("now ", currentPlayer, "'s turn!");
+
+            //if(isJump) {
+            //    while (selectedCoords !== oldSelectedPiece) {
+            //        console.log("You can only move the last jumped piece!");
+            //        w.addEventListener('click', selectPiece, {once: true});
+            //    }
+            //}
+
     }
 };
 
