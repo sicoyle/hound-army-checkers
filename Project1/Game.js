@@ -447,3 +447,15 @@ for (x = 0; x < button.length; x++) {
 function refreshPage(){
     window.location.reload();
 }
+
+//Test function for moving pieces
+const test = () => {
+    let testingPiece = document.getElementById('2,1');
+    try{
+        movePiece(testingPiece.click());
+    }
+    catch(error){
+        alert('Successfully tested the selection of a piece and displayed optional moves! Try moving the piece. There are no more tests to run. Enjoy the game!');
+    }
+}
+
