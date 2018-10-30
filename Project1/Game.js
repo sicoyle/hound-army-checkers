@@ -367,6 +367,17 @@ const movePiece = (e) => {
             capturedNode = document.getElementById(captured);
             capturedNode.innerHTML = '';
 
+            // Check if GAME OVER
+            // If Cat Army (player 1) wins...
+            if (player1Score === 12 && player1Score > player2Score){
+                alert("Cat Army has won the battle!");
+                refreshPage();
+            }
+            // If Hound Army (player 2) wins...
+            if (player2Score === 12 && player1Score > player2Score){
+                alert("Hound Army has won the battle!");
+                refreshPage();
+            }
 
             prevSelectedPiece[0] = rowInt;
             prevSelectedPiece[1] = colInt;
